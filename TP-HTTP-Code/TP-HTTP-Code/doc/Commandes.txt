@@ -11,6 +11,9 @@ GET /Error404.html HTTP/1.1
 HOST: localhost
 Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
 
+HEAD /Error404.html HTTP/1.1
+HOST: localhost
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
 
 
 GET /Adder.html HTTP/1.1
