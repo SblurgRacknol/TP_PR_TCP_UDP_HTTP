@@ -13,6 +13,8 @@ import java.net.Socket;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.io.FileWriter;
+import java.awt.Image;
+import javax.imageio.ImageIO;
 
 /**
  * WebServer allowing to use different requests : GET, DELETE, PUT
@@ -33,7 +35,7 @@ public class WebServer {
    * Starts the server on the port 3000
    * Waits for a connection
    * When a client is connected, waits for requests and responds 
-   * Returns a header with the code 400 Bad Request if the request' syntex is incorrect
+   * Returns a header with the code 400 Bad Request if the request' syntax is incorrect
    */
   protected void start() 
   {
@@ -56,6 +58,8 @@ public class WebServer {
 
     //initialisation
     supportedTypes.add("text/html");
+    // attempt to handle images - see line 235
+    //supportedTypes.add("image/jpg");
 
     System.out.println("Waiting for connection");
     for (;;) 
@@ -99,7 +103,7 @@ public class WebServer {
 	
 	if(!header.startsWith("GET") && !header.startsWith("PUT") && !header.startsWith("DELETE") && !header.startsWith("HEAD"))
 	{
-        	System.out.println ("Error : can not read request");
+        	System.out.println ("Error : Unknown request");
         	
   		out.println("HTTP /1.0 400 Bad Request");
   		out.println("Content-Type: text/html");
@@ -152,6 +156,7 @@ public class WebServer {
       catch (Exception e) 
       {
         System.out.println("Error: " + e);
+        
       }
     }
   }
@@ -178,20 +183,21 @@ public class WebServer {
   {
     for(String t : supportedTypes)
     {
-      if(t.startsWith(type))
-      {
-        return true;
-      }
+	if(t.startsWith(type))
+	{
+	return true;
+	}
     }
     return false;
   }
   
   /**
-    * Method get
+    * Method GET
     * Tries to open a file and send it to the client
     * Returns a header with the code 200 OK if the file was found and successfully sent to the client
     * Returns a header with the code 404 Not Found if the file was not found
     * Returns a header with the code 406 Not Acceptable if the resource's type is not supported
+    * Returns a header with the code 500 Internal Server Error if an internal error occured
     * @param out stream allowing the server to send information to the client who sent the request
     * @param resourceName name of the resource the client asked for
     * @param dataType type of the resource the client asked for
@@ -214,18 +220,26 @@ public class WebServer {
   				out.println("Content-Type: " + dataType);
   				out.println("Server: Bot");
   				out.println("");
-  				
-  				//Send the HTML page
-  				while (reader.hasNextLine())
+  				if (dataType.equals("text/html"))
   				{
-  					out.println(reader.nextLine());
+	  				//Send the HTML page
+	  				while (reader.hasNextLine())
+	  				{
+	  					out.println(reader.nextLine());
+	  				}
   				}
+  				// attempt to handle images - see line 63
+  				/*else if (dataType.equals("image/jpg"))
+  				{
+  					out.println("<img src=\"" + resourceName + "\">");
+  				}
+  				*/
   			}
   			else 
   			{
   				//Send the header
   				out.println("HTTP/1.0 404 Not Found");
-  				out.println("Content-Type: text/html");
+  				out.println("Content-Type: " + dataType);
   				out.println("Server: Bot");
   				out.println("");
   			}
@@ -234,7 +248,7 @@ public class WebServer {
   		{
   			System.out.println("type : " + dataType + " not supported.");
   			out.println("HTTP/1.0 406 Not Acceptable");
-			out.println("Content-Type: text/html");
+			out.println("Content-Type: "+ dataType);
 			out.println("Server: Bot");
 			out.println("");
   		}
@@ -243,16 +257,22 @@ public class WebServer {
   	catch (Exception e)
   	{
   		System.out.println("Error: " + e);
+  		
+  		out.println("HTTP/1.0 500 Internal Server Error");
+		out.println("Content-Type: "+ dataType);
+		out.println("Server: Bot");
+		out.println("");
   	}
 
   }
   
   /**
-    * Method delete
+    * Method DELETE
     * Tries to open a file and delete it
     * Returns a header with the code 200 OK if the file was found and successfully deleted
     * Returns a header with the code 404 Not Found if the file was not found
     * Returns a header with the code 403 Forbidden if the file was found but could not be deleted
+    * Returns a header with the code 500 Internal Server Error if an internal error occured
     * @param out stream allowing the server to send information to the client who sent the request
     * @param resourceName name of the resource the client asked to delete
     */
@@ -288,6 +308,10 @@ public class WebServer {
   	catch (Exception e)
   	{
   		System.out.println("Error: " + e);
+  		
+  		out.println("HTTP/1.0 500 Internal Server Error");
+		out.println("Server: Bot");
+		out.println("");
   	}
   }
   /**
@@ -297,6 +321,7 @@ public class WebServer {
     * Returns a header with the code 200 OK if the file was successfully created and filled
     * Returns a header with the code 206 Partial Content if the file was created but the server couldn't write in it
     * Returns a header with the code 409 Conflict if the file could not be created 
+    * Returns a header with the code 500 Internal Server Error if an internal error occured
     * @param out stream allowing the server to send information to the client who sent the request
     * @param in stream allowing the server to receive information from the client who sent the request
     * @param resourceName name of the resource the client 
@@ -339,6 +364,10 @@ public class WebServer {
   	catch (Exception e)
   	{
   		System.out.println("Error : " + e);
+  		
+  		out.println("HTTP/1.0 500 Internal Server Error");
+		out.println("Server: Bot");
+		out.println("");
   	}
   }
   
@@ -350,6 +379,7 @@ public class WebServer {
     * Returns a header with the code 200 OK if the file was found and successfully sent to the client
     * Returns a header with the code 404 Not Found if the file was not found
     * Returns a header with the code 406 Not Acceptable if the resource's type is not supported
+    * Returns a header with the code 500 Internal Server Error if an internal error occured
     * @param out stream allowing the server to send information to the client who sent the request
     * @param resourceName name of the resource the client asked for
     * @param dataType type of the resource the client asked for
@@ -393,6 +423,11 @@ public class WebServer {
   	catch (Exception e)
   	{
   		System.out.println("Error: " + e);
+  		
+  		out.println("HTTP/1.0 500 Internal Server Error");
+		out.println("Content-Type: "+ dataType);
+		out.println("Server: Bot");
+		out.println("");
   	}
   }
 }
