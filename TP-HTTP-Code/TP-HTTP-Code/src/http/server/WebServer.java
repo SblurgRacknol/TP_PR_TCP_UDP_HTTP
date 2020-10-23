@@ -96,7 +96,8 @@ public class WebServer {
         	}
         }
 	// sends a header with the code 400 Bad Request if the request is not handled by the server
-	if(!header.startsWith("GET") || !header.startsWith("PUT") || !header.startsWith("DELETE") || header.startsWith("HEAD"))
+	
+	if(!header.startsWith("GET") && !header.startsWith("PUT") && !header.startsWith("DELETE") && !header.startsWith("HEAD"))
 	{
         	System.out.println ("Error : can not read request");
         	
