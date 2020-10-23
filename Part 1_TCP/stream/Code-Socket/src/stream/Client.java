@@ -1,6 +1,7 @@
 /***
  * Client
- * TCP client 
+ * A TCP client 
+ * Authors : Lucie Clémenceau and Sylvain de Joannis de Verclos
  * java -cp ./ stream.Client localhost 8000
  */
 package stream;
@@ -10,9 +11,15 @@ import java.net.*;
 
 public class Client { 
   /**
-  *  main method
-  *  accepts a connection, reads a message from the standard input and sends it to the server
-  **/
+  * main method
+  * Tries to connect to the ServerMultiThreaded on the specified port
+  * When connected, creates a ServerListenerThread and starts it
+  * Waits for an input from the keyboard
+  * When something is entered on the keyboard, sends it to the ClientListenerThread
+  * @author Lucie Clémenceau and Sylvain de Joannis de Verclos
+  * @param args the server address and port
+  * @version 1.0
+  */
     public static void main(String[] args) throws IOException {
 
         Socket socket = null;
@@ -27,7 +34,7 @@ public class Client {
 
         try 
         {
-      	    // creation socket ==> connexion
+      	    // socket creation ===> connection
             socket = new Socket(args[0],new Integer(args[1]).intValue());
             ServerListenerThread slt = new ServerListenerThread(socket);
             slt.start(); 

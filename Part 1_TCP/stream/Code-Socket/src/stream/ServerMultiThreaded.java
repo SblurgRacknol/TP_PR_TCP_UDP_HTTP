@@ -1,6 +1,7 @@
 /***
  * Server
  * TCP multi-threaded server
+ * Authors : Lucie Clémenceau and Sylvain de Joannis de Verclos
  * Run with: java -cp classes stream.ServerMultiThreaded 8000
  */
 
@@ -12,15 +13,20 @@ import java.util.ArrayList;
 
 public class ServerMultiThreaded  
 {
-	
+	/** list of the client sockets*/
 	public static ArrayList<Socket> clientSocketList = new ArrayList<Socket>();  
+	/** list of the client sockets' output streams*/
 	public static ArrayList<PrintStream> clientSocketOutputSocketStreamList = new ArrayList<PrintStream>();  
+	/** history of the messages*/
 	public static ArrayList<String> messagesHistory = new ArrayList<String>();
 	 
  	/**
   	* main method
-	* @param server port
-  	* 
+	* Starts the server on the specified port 
+	* Waits for a connection
+	* When a client is connected, creates a ClientListenerThread and starts it
+	* @param args the server port
+        * @author Lucie Clémenceau and Sylvain de Joannis de Verclos 
   	**/
 	public static void main(String args[])
 	{ 

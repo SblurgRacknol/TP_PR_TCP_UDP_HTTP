@@ -1,8 +1,6 @@
 /***
  * ClientThread
- * Example of a TCP server
- * Date: 14/12/08
- * Authors:
+ * Authors : Lucie Clémenceau and Sylvain de Joannis de Verclos
  */
 
 package stream;
@@ -10,18 +8,26 @@ package stream;
 import java.io.*;
 import java.net.*;
 
+
 public class ClientListenerThread extends Thread 
 {
+	/** socket of the server*/
 	private Socket clientSocket;
-	
+
+	/**
+  	* Constructor of the ClientListenerThread
+  	* @param s the server socket
+  	**/
 	ClientListenerThread(Socket s) 
 	{
 		this.clientSocket = s;
 	}
 
  	/**
-  	* receives a message from the client it is linked to then sends it to all the clients
-  	* @param clientSocket the client socket
+  	* Method run
+	* waits for a message from the client it's linked to 
+	* When the client sends a message, broadcasts it to all the ServerListenerThreads
+	* @author Lucie Clémenceau and Sylvain de Joannis de Verclos
   	**/
 	public void run() 
 	{
