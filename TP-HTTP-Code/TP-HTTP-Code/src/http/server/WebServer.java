@@ -1,5 +1,6 @@
 ///A Web Server (WebServer.java)
-//java -cp ./ http.server.WebServer
+// javac -d bin src/*/*/*.java
+// java -cp ./bin http.server.WebServer 
 
 package http.server;
 
@@ -22,7 +23,7 @@ public class WebServer {
   /** List of the types of ressources the server can handle*/
   public ArrayList<String> supportedTypes = new ArrayList();
   /** File path of the folder where we put the ressources - to be changed !! */
-  public String docPath = "/home/lucie/Documents/Reseaux/PR_TP_chat_system/TP-HTTP-Code /TP-HTTP-Code/doc";
+  public String docPath = "/home/lclemencea/Documents/TP_PR_TCP_UDP_HTTP/TP-HTTP-Code/TP-HTTP-Code/doc";
   /** File path of the error 404 page*/
   public File error404File = new File(docPath + "Error404.html");
   
@@ -94,43 +95,9 @@ public class WebServer {
         		dataType = str.substring(8,str.length()).split(",")[0];
         	}
         }
-        // Here we consider the HTTP syntax to be respected
-        String requestType = header.split(" ")[0];
-        String resourceName = header.split(" ")[1];
-        if (requestType.equals("GET"))
-        {
-        	get(out, resourceName, dataType);
-        }
-        else if (requestType.equals("DELETE"))
-        {
-        	delete(out, resourceName);
-        }
-        else if (requestType.equals("PUT"))
-        {
-        	//read the body of the request
-        	end = false ;
-        	str="";
-		while (!end)
-		{
-			str = in.readLine();
-			if (str.equals(""))
-			{
-				end = true;
-			}
-			else 
-			{
-				body+=str+"\n";
-			
-			}
-		}
-		put(in, out, resourceName, body); 
-        }
-        else if (requestType.equals("HEAD"))
-        {
-        	head(out, resourceName, dataType);
-        }
-        else
-        {
+	// sends a header with the code 400 Bad Request if the request is not handled by the server
+	if(!header.startsWith("GET") || !header.startsWith("PUT") || !header.startsWith("DELETE") || header.startsWith("HEAD"))
+	{
         	System.out.println ("Error : can not read request");
         	
   		out.println("HTTP /1.0 400 Bad Request");
@@ -138,6 +105,46 @@ public class WebServer {
   		out.println("Server: Bot");
   		out.println("");
         }
+	else 
+	{
+
+		// Here we consider the HTTP syntax to be respected
+		String requestType = header.split(" ")[0];
+		String resourceName = header.split(" ")[1];
+		if (requestType.equals("GET"))
+		{
+			get(out, resourceName, dataType);
+		}
+		else if (requestType.equals("DELETE"))
+		{
+			delete(out, resourceName);
+		}
+		else if (requestType.equals("PUT"))
+		{
+			//read the body of the request
+			end = false ;
+			str="";
+			while (!end)
+			{
+				str = in.readLine();
+				if (str.equals(""))
+				{
+					end = true;
+				}
+				else 
+				{
+					body+=str+"\n";
+				
+				}
+			}
+			put(in, out, resourceName, body); 
+		}
+		else if (requestType.equals("HEAD"))
+		{
+			head(out, resourceName, dataType);
+		}
+	}
+       
         out.flush();
         remote.close();
       } 
@@ -388,7 +395,6 @@ public class WebServer {
   	}
   }
 }
-
 
 
 
