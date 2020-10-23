@@ -1,6 +1,7 @@
 /***
  * ClientMulticast
  * UDP client
+ * Authors : Lucie Clémenceau and Sylvain de Joannis de Verclos 
  * run: java -cp ./ stream.ClientMulticast 228.5.6.7 6789 
  */
 package stream;
@@ -12,10 +13,15 @@ import java.lang.Integer;
 public class ClientMulticast {
 
  
-  /**
-  *  main method
-  *  
-  **/
+    /**
+    * main method
+    * creates a multicast socket on the group port and joins it to the group on the specified address
+    * creates a MulticastListenerThread
+    * Waits for a message to be entered on the keyboard
+    * When a message is entered, sends it to the group with the multicast socket
+    * @param args the INET Address and the group port
+    * @author Lucie Clémenceau and Sylvain de Joannis de Verclos 
+    **/
     public static void main(String[] args) throws IOException {
 
       if(args.length != 2)
@@ -47,7 +53,6 @@ public class ClientMulticast {
       {
         //send a message
         String messageToSend;
-        //byte[] buf = new byte[1000]; 
         MulticastListenerThread mlt = new MulticastListenerThread(multicastClientSocket);
         mlt.start();
 

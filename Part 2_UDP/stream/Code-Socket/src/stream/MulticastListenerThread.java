@@ -1,8 +1,6 @@
 /***
  * MulticastListenerThread
- * Example of a TCP server
- * Date: 14/12/08
- * Authors:
+ * Authors : Lucie Clémenceau and Sylvain de Joannis de Verclos 
  */
 
 package stream;
@@ -12,16 +10,23 @@ import java.net.*;
 
 public class MulticastListenerThread extends Thread 
 {
+	/** the multicastClient's multicast socket*/
 	private MulticastSocket multicastClientSocket;
-	
+	/**
+  	* Constructor of the MulticastListenerThread
+	* @param args the multicastClient's multicast socket
+        * @author Lucie Clémenceau and Sylvain de Joannis de Verclos 
+  	**/
 	MulticastListenerThread(MulticastSocket s) 
 	{
 		this.multicastClientSocket = s;
 	}
 
  	/**
-  	* Wait and receive messages from clients
-  	* @param clientSocket the client socket
+  	* Method run
+	* Waits for a message to be sent on the output stream of MulticastSocket
+	* When a message is sent, displays it on the standard output
+        * @author Lucie Clémenceau and Sylvain de Joannis de Verclos 
   	**/
 	public void run() 
 	{
