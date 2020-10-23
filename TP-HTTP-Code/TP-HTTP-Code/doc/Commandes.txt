@@ -1,3 +1,9 @@
+Compilation :
+javac -d bin src/*/*/*.java
+Exécution :
+java -cp ./bin http.server.WebServer 
+
+(dans le répertoire TP-HTTP-Code)
 
 
 telnet localhost 3000
@@ -33,6 +39,8 @@ HOST: localhost
 
 <h1>This is my new file</h1>
 
+DELETE /myNewFile.html HTTP/1.1
 
-
+Javadoc :
+javadoc -d ./lib src/http/server/WebServer.java
 
