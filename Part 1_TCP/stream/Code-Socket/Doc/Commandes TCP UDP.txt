@@ -1,0 +1,19 @@
+TP TCP 
+
+compilation dans repertoire Code-Socket
+javac -d bin ./src/stream/*.java
+
+execution du server TCP sur le port 3001 (repetoire Code-Socket):
+java -cp ./bin stream.ServerMultiThreaded 3001
+
+execution du client TCP:
+java -cp ./bin stream.Client localhost 3001
+
+TP UDP
+
+compilation dans repertoire Code-Socket
+javac -d bin ./src/stream/*.java
+
+execution du client UDP multicast 
+java -cp ./bin stream.ClientMulticast 228.5.6.7 6789 
+
